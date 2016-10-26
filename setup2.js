@@ -3,8 +3,8 @@ var
 	particles = [],
 	elevated = 255,
 	tailLength =200,
-	RADIUS = 1,
-	particlesNum = 20000;
+	RADIUS = 20,
+	particlesNum = 200;
 start();
 
 function resize() {//Is called when the window is resized
