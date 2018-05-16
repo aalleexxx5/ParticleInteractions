@@ -2,8 +2,8 @@ var c,ctx;
 var
 	particles = [],
 	elevated = 255,
-	RADIUS = 50,
-	particlesNum = 15,
+	RADIUS = 20,
+	particlesNum = 200,
 	particleSpeedLimit = 2;
 start();
 
@@ -38,7 +38,6 @@ function draw(){
 		ctx.arc(particle.x,particle.y,RADIUS,0,2*Math.PI);//go in a circle
 		ctx.fill(); //fill the circle
 		ctx.closePath(); //stop the drawing
-
 		if (particle.state!=0){
 			particle.red=particle.state;
 			particle.blue=Math.floor((255-particle.state)/2);
@@ -201,8 +200,8 @@ function forcefulCollision(particle1, particle2){
 	particle1.state=elevated;
 	particle2.state=elevated;
 
-	var force = Math.abs(Math.sqrt(sqr(particle2.vx)+sqr(particle2.vy))-Math.sqrt(sqr(particle1.vx)+sqr(particle1.vy)));
-
+	//var force = Math.abs(Math.sqrt(sqr(particle2.vx)+sqr(particle2.vy))-Math.sqrt(sqr(particle1.vx)+sqr(particle1.vy)));
+	var force = 1;
 	var centerX1 = particle2.x-particle1.x;
 	var centerY1 = particle2.y-particle1.y;
 
