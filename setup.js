@@ -27,17 +27,19 @@ function start() { //Called when the page loads.
 function draw(){
 	ctx.fillStyle="#ffffff";
 	ctx.clearRect(0,0, c.width, c.height);
-	ctx.globalCompositeOperation = 'lighter';// white effect when stuff passes over each other
-	var exemptParticles = [];
+	ctx.globalCompositeOperation = 'source-over';// white effect when stuff passes over each other
 
 	for (var i=0;i<particlesNum;i++){ //loop through all particles
 		var particle=particles[i];
 
+		//Draw the individual particle
 		ctx.fillStyle="rgb("+particle.red+", "+particle.green+", "+particle.blue+")"; // Set drawing color to be the color of the particle
 		ctx.beginPath();//start a drawing
 		ctx.arc(particle.x,particle.y,RADIUS,0,2*Math.PI);//go in a circle
 		ctx.fill(); //fill the circle
 		ctx.closePath(); //stop the drawing
+
+		//Coloring
 		if (particle.state!=0){
 			particle.red=particle.state;
 			particle.blue=Math.floor((255-particle.state)/2);
@@ -45,22 +47,10 @@ function draw(){
 		}
 		particle.x+=particle.vx; //update the particles' location
 		particle.y+=particle.vy;
-		if (exemptParticles.indexOf(i)!=-1) continue;
 
-		for(var j=0;j<particlesNum;j++) {//Particle collision logic:
-			//simplified collision:
-			if (particles[j].x + RADIUS * 2<particle.x) continue;
-			if (particles[j].x - RADIUS * 2>particle.x) continue;
-			if (particles[j].y + RADIUS * 2<particle.y) continue;
-			if (particles[j].y - RADIUS * 2>particle.y) continue;
-			if (j==i) continue;
-			//precise circular collision:
+		for(var j=i+1;j<particlesNum;j++) {//Particle collision logic:
 			if (sqr(particles[j].x - particle.x) + sqr(particles[j].y - particle.y)<sqr(RADIUS*2)) {
-				//simpleCollision(particle,particles[j]);
-
 				forcefulCollision(particle, particles[j]);
-				exemptParticles.push(j);
-
 			}
 		}
 
@@ -197,8 +187,8 @@ function simpleCollisionWithSpeedSwap(particle1, particle2){
 }
 
 function forcefulCollision(particle1, particle2){
-	particle1.state=elevated;
-	particle2.state=elevated;
+	particle1.state=particle2.state=elevated;
+	//particle2.state=elevated;
 
 	//var force = Math.abs(Math.sqrt(sqr(particle2.vx)+sqr(particle2.vy))-Math.sqrt(sqr(particle1.vx)+sqr(particle1.vy)));
 	var force = 1;
@@ -206,7 +196,6 @@ function forcefulCollision(particle1, particle2){
 	var centerY1 = particle2.y-particle1.y;
 
 	var divisor = force /Math.sqrt(sqr(centerX1)+sqr(centerY1));
-
 	centerX1=centerX1*divisor;
 	centerY1=centerY1*divisor;
 
